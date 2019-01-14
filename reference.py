@@ -1,12 +1,25 @@
 
+# These import statements are actually used by things which import reference
 import threading
 import time
 from codeTimer import CodeTimer
 
 codeTimer = CodeTimer()
 
-numStrings = 12
-numPixelsPerString = 150
+runThreads = True # Used to stop the execution of all threads
+
+# LED strip configuration:
+NUM_STRINGS    = 6       # Number of strings total
+PIXELS_PER_STRING = 150  # Number of pixels per led string
+LED_COUNT      = 450     # Number of LED pixels.
+LED_PIN        = 12      # GPIO pin connected to the pixels (18 uses PWM!).
+LED_PIN2       = 13      # GPIO pin connected to the pixels (18 uses PWM!).
+LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
+LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
+LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
+LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
+LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
+
 
 screenSize = (1100, 600)
 screenBorder = {
@@ -63,7 +76,11 @@ def toHex(color):
         assert False, "Color not recognized: " + str(color)
 
 def stopAllThreads():
-    pass # I'm not sure how to do this atm, sorry
+    global runThreads
+    runThreads = False
+
+def threadsShouldBeRunning():
+    return runThreads
 
 # Given a rectangle, turn the width and height into x2 and y2 positions for tkinter
 def rectalize(x, y, width, height, center=False):
@@ -71,3 +88,29 @@ def rectalize(x, y, width, height, center=False):
         return x-width/2,y-height/2,x+width/2,y+height/2
     else:
         return x,y,x+width,y+height
+
+"""
+Just going to put this here for a bit of reference
+class Test:
+    def __init__(self, numStrips=numStrings, numLedsPerStrip=numPixelsPerString):
+        self.lights = []
+        self.updatingThread = None
+        self.red = 0
+
+        # # Generates a basic set of lights
+        for string in range(numStrips):  # range(number of strings)
+            self.lights.append([])
+            for led in range(numLedsPerStrip):  # range(number of leds)
+                self.lights[string].append((255, 0, 0))
+
+    def update(self):
+
+        self.red += 100
+        if self.red > 255: self.red = 0
+
+        print(self.red)
+
+        for stringNum in range(len(self.lights)):
+            for ledNum in range(len(self.lights[stringNum])):
+                self.lights[stringNum][ledNum] = (self.red, 0, 0)
+"""

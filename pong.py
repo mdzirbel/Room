@@ -1,9 +1,11 @@
 from reference import *
+import controller
 
-class Pong:
+class Pong(controller.Controller):
 
-    def __init__(self, beingPressed, fps=30, wallColor="white", backgroundColor="black"):
-        self.fps = fps
+    def __init__(self, beingPressed, name="unnamed", fps=30, startImmediately=True, wallColor="white", backgroundColor="black"):
+        controller.Controller.__init__(self, name, fps)
+
         self.beingPressed = beingPressed
 
         self.left = MovingWall("left", "white")
@@ -12,47 +14,42 @@ class Pong:
 
         self.height = .6 # Wall height in meters
 
-        self.wallNumPixels = int((150/2.5)*self.height) # For reference
+        self.wallNumPixels = int((PIXELS_PER_STRING / 2.5) * self.height) # For reference
 
         # For quick use later we now make the arrays
         wallColor = toHex(wallColor)
         backgroundColor = toHex(backgroundColor)
 
-        self.backgroundPixels = [backgroundColor for _ in range(150-self.wallNumPixels)]
+        self.backgroundPixels = [backgroundColor for _ in range(PIXELS_PER_STRING - self.wallNumPixels)]
         self.wallPixels = [wallColor for _ in range(self.wallNumPixels)]
-
-        self.keepRunningThread = True
 
         self.lights = {
             "lights": self.getLights(),
             "laser": self.getLaser()
         }
 
-        threading.Thread(target=self.move).start()
-
-    def stop(self):
-        self.keepRunningThread = False
+        if startImmediately:
+            self.startThread()
 
     def getLights(self):
 
-        leftY = int(self.left.pos*(150/config["ceiling_size"][1])-self.wallNumPixels/2)
+        leftY = int(self.left.pos * (PIXELS_PER_STRING / config["ceiling_size"][1]) - self.wallNumPixels / 2)
         leftColumn = self.backgroundPixels[:]
         leftColumn[leftY:leftY] = self.wallPixels
 
-        rightY = int(self.right.pos*(150/config["ceiling_size"][1])-self.wallNumPixels/2)
+        rightY = int(self.right.pos * (PIXELS_PER_STRING / config["ceiling_size"][1]) - self.wallNumPixels / 2)
         rightColumn = self.backgroundPixels[:]
         rightColumn[rightY:rightY] = self.wallPixels
 
-        return [leftColumn, [],[],[],[],[],[],[],[],[],[], rightColumn]
+        lights = [leftColumn, rightColumn]
 
-    def updateLights(self):
-        self.lights["lights"] = self.getLights()
+        for i in range(NUM_STRINGS - 2):
+            lights.insert(1,[])
+
+        return lights #[leftColumn, [],[],[],[],[],[],[],[],[],[], rightColumn]
 
     def getLaser(self):
         return self.ball.pos
-
-    def updateLaser(self):
-        self.lights["laser"] = self.getLaser()
 
     def moveWalls(self):
         if 'a' in self.beingPressed and not 'z' in self.beingPressed:
@@ -77,25 +74,10 @@ class Pong:
         self.right.move(self.right.pos + .07)
         # print("right down")
 
-    def move(self):
-
-        try:
-            while self.keepRunningThread:
-
-                startTime = time.time() # Record the start time of the function
-
-                # Function code:
-                self.ball.move(self.left, self.right)
-                self.ball.speedUp()
-                self.moveWalls()
-                self.updateLights()
-
-                elapsedTime = time.time() - startTime # Find the time it took to run move code
-                time.sleep(1/self.fps - elapsedTime) # Sleep the time minus the time execution took
-
-        finally:
-            stopAllThreads()
-
+    def tick(self):
+        self.ball.move(self.left, self.right)
+        self.ball.speedUp()
+        self.moveWalls()
 
 
 class Ball:

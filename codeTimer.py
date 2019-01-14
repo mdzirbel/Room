@@ -1,7 +1,7 @@
 import time
 
 # The ids to not track, so that timing debugging can be turned off easily from here
-dontTrack = ["set","regular"]
+dontTrack = ["set","regular", "oneLightString"]
 
 roundPrecision = 8 # Number of decimal places to save/print
 
