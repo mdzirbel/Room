@@ -4,9 +4,8 @@ from reference import *
 
 class Lights:
     def __init__(self, lights, fps, mode="gui"):
-        assert lights and type(lights) is list, "You should pass in a list of colors for the lights value, was " + lights
         assert type(fps) is int and 1 <= fps <= 200, "fps should be an integer between 1 and 200, was " + fps
-        assert mode == "gui" or mode == "ceil", "mode should only be \"gui\" or \"ceil\", was " + mode
+        assert mode in ["gui", "ceil"], "mode should only be \"gui\" or \"ceil\", was " + mode
 
         self.lights = lights # The lights you want it to put on the ceiling / screen
         self.mode = mode # Whether to use a gui or go to the ceiling. Options are "gui" and "ceil"
@@ -31,7 +30,7 @@ class Lights:
     def updateLEDs(self):
         pass # TODO Write function
     # Keep in mind that:
-    # self.lights should be unpacked to lights and laser using the helper function at the bottom
+    # self.lights should be unpacked to lights and laser using the helper function getLedsAndLights(lights) at the bottom of this file
     # If the spot where a string of leds could be has a string, that should be a color to set the whole string to, eg lights = ["black", "blue", "green"]
     # An empty list should be treated like "black", so that lights = [[], [], []] == ["black", "black", "black"]
     # lights will always be a list after the unpacking function. If it's passed in as a string, the unpacking function will fix it. eg: "white" -> ["white", "white", "white"]
@@ -48,7 +47,7 @@ class Lights:
                 elapsedTime = time.time() - startTime # Find the time it took to run move code
                 toWait = 1 / self.fps - elapsedTime # Calculate time to wait for next frame
                 if toWait < -0.02: # If the thread is severely behind, print out a warning
-                    print("lights GUI thread is behind by",round(toWait,2),"seconds (one "+str(-round(1/toWait, 2))+"th of a second)")
+                    print("lights GUI thread is behind by",round(toWait,2),"seconds (1 / "+str(-round(1/toWait, 2))+" seconds)")
                 elif toWait < 0: # Continue to the next frame if it's just a little behind
                     pass
                 else: # If it's ahead wait for the next frame
