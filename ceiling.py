@@ -4,27 +4,38 @@ from reference import *
 
 class Lights:
     def __init__(self, lights, fps, mode="gui"):
+        assert lights and type(lights) is list, "You should pass in a list of colors for the lights value, was " + lights
+        assert type(fps) is int and 1 <= fps <= 200, "fps should be an integer between 1 and 200, was " + fps
+        assert mode == "gui" or mode == "ceil", "mode should only be \"gui\" or \"ceil\", was " + mode
+
         self.lights = lights # The lights you want it to put on the ceiling / screen
-        self.laserConfig = laserConfig # The setup of the laser in the physical world. See top for example
         self.mode = mode # Whether to use a gui or go to the ceiling. Options are "gui" and "ceil"
         self.fps = fps
 
         if self.mode=="gui":
-            root = tk.Tk()
-            root.title = "Game"
-            root.resizable(0,0)
-            root.wm_attributes("-topmost", 1)
-            self.canvas = tk.Canvas(root, width=screenSize[0], height=screenSize[1], bd=0, highlightthickness=0)
-            self.canvas.focus_set()
-            self.canvas.pack()
-            self.laser = None
-            self.lightsObjects = []
-            if lights:
-                self.initializeGUI()
-                self.updateGUI()
+
+            # Initialize useful variables
+            self.laser = None # Initialize the variable which will hold the Tkinter circle for the laser if there is one, or None if there isn't
+            self.canvas = None # Initialize the variable which will hold the canvas object
+            self.lightsObjects = [] # Holds the Tkinter rectangles for the lights
+
+            self.initializeGUI()
+            self.updateGUI()
 
     def stop(self):
         pass # TODO Set all lights to off
+
+    def initializeLEDs(self):
+        pass # TODO Add any initialization which may need to be written
+
+    def updateLEDs(self):
+        pass # TODO Write function
+    # Keep in mind that:
+    # self.lights should be unpacked to lights and laser using the helper function at the bottom
+    # If the spot where a string of leds could be has a string, that should be a color to set the whole string to, eg lights = ["black", "blue", "green"]
+    # An empty list should be treated like "black", so that lights = [[], [], []] == ["black", "black", "black"]
+    # lights will always be a list after the unpacking function. If it's passed in as a string, the unpacking function will fix it. eg: "white" -> ["white", "white", "white"]
+    # Make sure you read the updateGUI function
 
     def autoUpdate(self):
         try:
@@ -35,27 +46,36 @@ class Lights:
                 self.update()  # Update the gui / physical leds
 
                 elapsedTime = time.time() - startTime # Find the time it took to run move code
-                toWait = 1 / self.fps - elapsedTime
-                if toWait < -0.02:
+                toWait = 1 / self.fps - elapsedTime # Calculate time to wait for next frame
+                if toWait < -0.02: # If the thread is severely behind, print out a warning
                     print("lights GUI thread is behind by",round(toWait,2),"seconds (one "+str(-round(1/toWait, 2))+"th of a second)")
-                elif toWait < 0:
+                elif toWait < 0: # Continue to the next frame if it's just a little behind
                     pass
-                else:
+                else: # If it's ahead wait for the next frame
                     time.sleep(toWait)  # Sleep the time minus the time execution took
 
         except tk.TclError as _:
             pass
 
-        finally:
+        finally: # In case of an error or for proper ending of the function, tell all other threads to exit when this thread exits
             stopAllThreads()
 
-    def updateLights(self, lights=None): # Called by the user to pass a new lights pointer in
+    def updateLights(self, lights): # Called by the user to pass a new lights pointer in
         self.lights = lights
-        self.updateGUI()
+        self.update()
 
     # Initialize the lights for the gui
-    def initializeGUI(self): # system is type of input is expected for lights. eg: "one color" or something, with lights=(20,30,50)
+    def initializeGUI(self):
         assert self.mode=="gui", "You need a gui to initialize the lights"
+
+        # Create the GUI
+        root = tk.Tk()
+        root.title = "Game"
+        root.resizable(0, 0)
+        root.wm_attributes("-topmost", 1)
+        self.canvas = tk.Canvas(root, width=screenSize[0], height=screenSize[1], bd=0, highlightthickness=0)
+        self.canvas.focus_set()
+        self.canvas.pack()
 
         leds, laser = getLedsAndLights(self.lights)
 
@@ -87,12 +107,12 @@ class Lights:
         if self.mode=="gui":
             self.updateGUI()
         elif self.mode=="ceil":
-            self.updateCeiling()
+            self.updateLEDs()
 
     # Changes the GUI to reflect the current position of self.lights. Assumes that there is a gui
     def updateGUI(self):
 
-        leds, laser = getLedsAndLights(self.lights) # Does not take time
+        leds, laser = getLedsAndLights(self.lights)
 
         # Render lights
         # print(self.lights)
@@ -148,7 +168,7 @@ def getLedsAndLights(lights):
     if isinstance(lights, dict):  # If it's a dictionary it should have a lights and a laser, otherwise it should be the lights if it's a string
         leds = lights["lights"]
         laser = lights["laser"]
-    elif isinstance(lights, str):  # If it's a string it should be a list with numStrings of the strings
+    elif isinstance(lights, str):  # If it's a string it indicates that all LEDS should be that color, so make a list of it to be handled later
         leds = [str for _ in range(NUM_STRINGS)]
         laser = None
     else:  # Default is to assume that self.lights is just the leds and there is no laser

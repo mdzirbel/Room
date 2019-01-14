@@ -10,10 +10,11 @@ ledUpdateRate = 20
 
 beingPressed = [] # this tracks whether the keys for pong are being pressed
 
-currentLightProgram = Pong(beingPressed, "pong")
+currentLightProgram = Pong(beingPressed, "pong") # Create an active pong game with a pointer to the keys being pressed and set its name as "pong"
 
 lightController = Lights(currentLightProgram.lights, ledUpdateRate, mode)
 
+# Create a system for logging which keys are being pressed. If we aren't using the GUI this won't work, so don't run it when not using the GUI
 if mode=="gui":
 
     def keyDown(event):
