@@ -3,7 +3,7 @@ import controller
 
 class Pong(controller.Controller):
 
-    def __init__(self, beingPressed, name="unnamed", fps=30, startImmediately=True, wallColor="white", backgroundColor="black"):
+    def __init__(self, beingPressed, name, fps=30, startImmediately=True, wallColor="white", backgroundColor="black"):
         controller.Controller.__init__(self, name, fps)
 
         self.beingPressed = beingPressed
