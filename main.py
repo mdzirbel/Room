@@ -2,7 +2,7 @@
 from ceiling import Lights
 from reference import *
 from pong import Pong
-import tkinter as tk
+import Tkinter as tk
 
 mode = "gui" # can be "gui" or "ceil"
 
@@ -12,7 +12,7 @@ beingPressed = [] # this tracks whether the keys for pong are being pressed
 
 currentLightProgram = Pong(beingPressed, "pong") # Create an active pong game with a pointer to the keys being pressed and set its name as "pong"
 
-lightController = Lights(currentLightProgram.lights, ledUpdateRate, mode)
+lightController = Lights(currentLightProgram.outputs, ledUpdateRate, mode)
 
 # Create a system for logging which keys are being pressed. If we aren't using the GUI this won't work, so don't run it when not using the GUI
 if mode=="gui":

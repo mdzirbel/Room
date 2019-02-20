@@ -1,4 +1,4 @@
-import tkinter as tk
+import Tkinter as tk
 from reference import *
 
 
@@ -47,7 +47,7 @@ class Lights:
                 elapsedTime = time.time() - startTime # Find the time it took to run move code
                 toWait = 1 / self.fps - elapsedTime # Calculate time to wait for next frame
                 if toWait < -0.02: # If the thread is severely behind, print out a warning
-                    print("lights GUI thread is behind by",round(toWait,2),"seconds (1 / "+str(-round(1/toWait, 2))+" seconds)")
+                    print "lights GUI thread is behind by",round(toWait,2),"seconds (1 / "+str(-round(1/toWait, 2))+" seconds)"
                 elif toWait < 0: # Continue to the next frame if it's just a little behind
                     pass
                 else: # If it's ahead wait for the next frame
@@ -101,7 +101,7 @@ class Lights:
         if laser:
             self.laser = self.canvas.create_oval(getLaserCoords(laser), fill=laserColor)
 
-    # The general update function for the lights controller, to be called when we want to update the current gui / physical leds
+    # The general update function for the lights controller, to be called when we want to update either the current gui / physical leds
     def update(self):
         if self.mode=="gui":
             self.updateGUI()
@@ -114,7 +114,7 @@ class Lights:
         leds, laser = getLedsAndLights(self.lights)
 
         # Render lights
-        # print(self.lights)
+        # print self.lights
         codeTimer.start("allLights")
         for stringNum in range(NUM_STRINGS):
             codeTimer.start("oneLightString")
@@ -124,13 +124,13 @@ class Lights:
                     for pixelNum in range(PIXELS_PER_STRING):
                         codeTimer.start("set")
                         self.canvas.itemconfig(self.lightsObjects[stringNum][pixelNum], fill="#000000")
-                        codeTimer.print("set")
+                        codeTimer.print_time("set")
                 else: # Treat it as a regular pixel list
                     for pixelNum in range(PIXELS_PER_STRING):
                         color = toHex(leds[stringNum][pixelNum])
                         codeTimer.start("regular")
                         self.canvas.itemconfig(self.lightsObjects[stringNum][pixelNum], fill=color)
-                        codeTimer.print("regular")
+                        codeTimer.print_time("regular")
 
             elif isinstance(leds[stringNum], str): # If it's a string with a color set the LED string to that color
                 color = toHex(leds[stringNum])
@@ -138,10 +138,10 @@ class Lights:
                     self.canvas.itemconfig(self.lightsObjects[stringNum][pixelNum], fill=color)
 
             else:
-                print("Can't figure out how to render something in updateGUI (in ceiling.py)")
+                print"Can't figure out how to render something in updateGUI (in ceiling.py)"
                 raise TypeError("Lights is not the right type to be figured out by ceiling.py (updateGUI())")
 
-            codeTimer.print("oneLightString")
+            codeTimer.print_time("oneLightString")
         # Order is somewhat important here. The laser should be rendered on top of the leds
         # If there is a laser, render it
         if laser:
@@ -159,7 +159,7 @@ class Lights:
         #
         # # Still needs to set the second servo
         #
-        # print("xAngle:", xAngle)
+        # print "xAngle:", xAngle
         # moveServo1(xAngle)
 
 # Unpack lights to leds and laser
