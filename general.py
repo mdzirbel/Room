@@ -4,7 +4,24 @@ import boto3
 import colorsys
 
 class General(controller.Controller):
-    def getBrightness(self):
+    def __init__(self, name, fps=1, startImmediately=True):
+        controller.Controller.__init__(self, name, fps)
+
+        self.lights = []
+        for i in range(NUM_STRINGS):
+            self.lights.append([])
+            for k in range(PIXELS_PER_STRING):
+                self.lights[i].append("black")
+
+        self.color = {'hue': .3333333, 'saturation': 1, 'brightness': 1}
+
+        self.dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+        self.table = self.dynamodb.Table('LightsStatus')
+
+        if startImmediately:
+            self.startThread()
+
+    def getBrightnessAWS(self):
         try:
             response = self.table.get_item(
                 Key={
@@ -17,7 +34,7 @@ class General(controller.Controller):
             item = response['Item']
             return int(item['brightness'])
 
-    def getColor(self):
+    def getColorAWS(self):
         try:
             response = self.table.get_item(
                 Key={
@@ -30,7 +47,7 @@ class General(controller.Controller):
             item = response['Item']
             return item['color']  # json.dumps(item, indent=4, cls=DecimalEncoder)[0]
 
-    def setColor(self, h, s, v):
+    def setColorAWS(self, h, s, v):
         response = self.table.update_item(
             Key={
                 'InfoId': 'Lights'
@@ -43,7 +60,7 @@ class General(controller.Controller):
         )
         return response['Attributes']['color']
 
-    def setBrightness(self, brightness):
+    def setBrightnessAWS(self, brightness):
         response = self.table.update_item(
             Key={
                 'InfoId': 'Lights'
@@ -56,7 +73,7 @@ class General(controller.Controller):
         )
         return response['Attributes']['brightness']
 
-    def getScene(self):
+    def getSceneAWS(self):
         try:
             response = self.table.get_item(
                 Key={
@@ -69,22 +86,6 @@ class General(controller.Controller):
             item = response['Item']
             return item['scene']
 
-    def __init__(self, name, fps=1, startImmediately=True):
-        controller.Controller.__init__(self, name, fps)
-
-        self.lights = []
-        for i in range(NUM_STRINGS):
-            self.lights.insert(1,[])
-
-        self.color = {'hue': .3333333, 'saturation': 1, 'brightness': 1}
-
-        self.dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
-        self.table = self.dynamodb.Table('LightsStatus')
-
-
-        if startImmediately:
-            self.startThread()
-
     def updateValues(self):
         color = self.getColor()
         rgb = colorsys.hsv_to_rgb(float(color['hue']) / 360.0, float(color['saturation']), float(color['brightness']))
@@ -94,7 +95,6 @@ class General(controller.Controller):
 
     def getLights(self):
         return self.lights
-
 
     def tick(self):
         if self.frameNum % self.fps == 0:
