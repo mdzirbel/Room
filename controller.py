@@ -50,7 +50,8 @@ class Controller(object):
                 self.updateLights()
                 self.frameNum += 1
                 if self.frameNum%self.fps == 0:
-                    print self.frameNum
+                    pass
+                    # print self.frameNum
                 elapsedTime = time.time() - startTime  # Find the time it took to run move code
                 toWait = 1.0 / self.fps - elapsedTime  # Calculate time to wait for next frame
                 if toWait < -0.02:  # If the thread is severely behind, print out a warning

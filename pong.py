@@ -49,8 +49,8 @@ class Pong(controller.Controller):
         for i in range(NUM_STRINGS - 2):
             lights.insert(1,[])
 
-        return ["red", "orange", "yellow", "green", "blue", "purple", "violet", "black", "white", "cyan"]
-        # return lights #[leftColumn, [],[],[],[],[],[],[],[],[],[], rightColumn]
+        # return ["red", "orange", "yellow", "green", "blue", "purple", "violet", "black", "white", "cyan"]
+        return lights #[leftColumn, [],[],[],[],[],[],[],[],[],[], rightColumn]
 
     def getLaser(self):
         return self.ball.pos
@@ -86,7 +86,7 @@ class Pong(controller.Controller):
 
 class Ball:
     def __init__(self):
-        self.pos = [config["ceiling_size"][0] / 2, config["ceiling_size"][1] / 2]  # center of the ball
+        self.pos = [config["ceiling_size"][0] / 2., config["ceiling_size"][1] / 2.]  # center of the ball
         self.vel = [.02, .02]
         self.size = [25, 25]
 

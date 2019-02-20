@@ -113,7 +113,7 @@ class Lights:
 
                 elapsedTime = time.time() - startTime # Find the time it took to run move code
                 toWait = 1.0 / self.fps - elapsedTime # Calculate time to wait for next frame
-                if toWait < -0.02: # If the thread is severely behind, print out a warning
+                if toWait < -0.05: # If the thread is severely behind, print out a warning
                     print "Lights thread is behind by",round(toWait,2),"seconds (1 / "+str(-round(1/toWait, 2))+" seconds)"
                 elif toWait < 0: # Continue to the next frame if it's just a little behind
                     pass
@@ -152,7 +152,6 @@ class Lights:
 
             # Calculate this ahead of time to cut down on time
             x = int(stringNum / (NUM_STRINGS - 1.) * (relevantScreenSize[0] - ledSize[0])) + screenBorder["left"]
-            print("x:",x,"/",relevantScreenSize)
             relevantY = relevantScreenSize[1] - ledSize[1]
 
             self.lightsObjects.append([])
