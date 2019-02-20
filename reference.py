@@ -9,9 +9,9 @@ codeTimer = CodeTimer()
 runThreads = True # Used to stop the execution of all threads
 
 # LED strip configuration:
-NUM_STRINGS    = 6       # Number of strings total
+NUM_STRINGS    = 10      # Number of strings total
 PIXELS_PER_STRING = 150  # Number of pixels per led string
-LED_COUNT      = 450     # Number of LED pixels.
+LED_COUNT      = NUM_STRINGS/2 * PIXELS_PER_STRING  # Number of LED pixels per side.
 LED_PIN        = 12      # GPIO pin connected to the pixels (18 uses PWM!).
 LED_PIN2       = 13      # GPIO pin connected to the pixels (18 uses PWM!).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -108,7 +108,7 @@ class Test:
         self.red += 100
         if self.red > 255: self.red = 0
 
-        print(self.red)
+        print self.red
 
         for stringNum in range(len(self.lights)):
             for ledNum in range(len(self.lights[stringNum])):

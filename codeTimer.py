@@ -18,9 +18,9 @@ class CodeTimer:
         if not trackId in dontTrack:
             return round(time.time() - self.startTimes[trackId], roundPrecision)
 
-    def print(self, trackId="current"):
+    def print_time(self, trackId="current"):
         if not trackId in dontTrack:
-            print(str(self.get(trackId))+"s since starting timer: \""+str(trackId)+"\"")
+            print str(self.get(trackId))+"s since starting timer: \""+str(trackId)+"\""
 
 
 """

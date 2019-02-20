@@ -17,7 +17,7 @@ class Alarm:
 		now = time.time()
 		return self.timeToAlarm-now
 	def shouldTakeOver(self):
-		#print(str(self.rampSlow())+":"+str(self.timeToRampSlow >= self.rampSlow() > -1))
+		#print str(self.rampSlow())+":"+str(self.timeToRampSlow >= self.rampSlow() > -1)
 		return self.timeToRampSlow >= self.rampSlow() > -1  #if we are <= timeToRampSlow or one second past
 	def getLights(self):
 		timeTakeOver = self.rampSlow()
@@ -62,7 +62,7 @@ def getBrightness():
 			}
 		)
 	except:
-		print(e.response['Error']['Message'])
+		print e.response['Error']['Message']
 	else:
 		item = response['Item']
 		return int(item['brightness'])
@@ -76,7 +76,7 @@ def getColor():
 			}
 		)
 	except Exception as e:
-		print(e.response['Error']['Message'])
+		print e.response['Error']['Message']
 	else:
 		item = response['Item']
 		return item['color']#json.dumps(item, indent=4, cls=DecimalEncoder)[0]
@@ -115,7 +115,7 @@ def getScene():
 			}
 		)
 	except Exception as e:
-		print(e.response['Error']['Message'])
+		print e.response['Error']['Message']
 	else:
 		item = response['Item']
 		return item['scene']
@@ -123,7 +123,7 @@ def getScene():
 
 def getDist(tlat1, tlon1, tlat2, tlon2):
 	R = 6373.0
-	#print(str(tlat1)+":"+str(tlon1)+":"+str(tlat2)+":"+str(tlon2))
+	#print str(tlat1)+":"+str(tlon1)+":"+str(tlat2)+":"+str(tlon2)
 	lat1 = radians(float(tlat1))
 	lon1 = radians(float(tlon1))
 	lat2 = radians(float(tlat2))
@@ -136,7 +136,7 @@ def getDist(tlat1, tlon1, tlat2, tlon2):
 
 	distance = R * c
 
-	#print("Result:", distance)
+	#print "Result:", distance
 	return distance
 
 def setSomeoneHome(home):
@@ -191,7 +191,7 @@ def updateValues():
 					pass
 					#setBrightness(brightness-1)
 		brightnessTicker = brightnessTicker + 1
-		#print(power+":"+str(float(color['hue'])/360.0), str(color['saturation']), str(color['brightness'])+":"+str(brightness))
+		#print power+":"+str(float(color['hue'])/360.0), str(color['saturation']), str(color['brightness'])+":"+str(brightness)
 		"""try:
 			if enableLife:
 				circles = api.get_circles()
@@ -209,19 +209,19 @@ def updateValues():
 								kmAway = getDist(dormLocation['lat'], dormLocation['lon'], memlocation['latitude'], memlocation['longitude'])
 							else:
 								kmAway = 99999
-							#print(circle['members'][i])
-							#print(circle['members'][i]['firstName']+":"+str(kmAway)+":"+str(time.time()-int(memlocation['timestamp']))+":"+circle['members'][i]['issues']['disconnected'])
+							#print circle['members'][i]
+							#print circle['members'][i]['firstName']+":"+str(kmAway)+":"+str(time.time()-int(memlocation['timestamp']))+":"+circle['members'][i]['issues']['disconnected']
 							if kmAway<.07 and (circle['members'][i]['features']['disconnected']=='0'):# and (time.time()-int(memlocation['timestamp']))<500:
 								someoneHome = True
 					setSomeoneHome(someoneHome)
 				if wasSomeoneHome and not someoneHome:
-					print('Someone was home but not anymore, turning off lights')
+					print 'Someone was home but not anymore, turning off lights'
 					setPower(False)
 				wasSomeoneHome = someoneHome
-			print('Power:'+str(power)+', Brightness:'+str(brightness)+', Someone Home:'+str(someoneHome))
+			print 'Power:'+str(power)+', Brightness:'+str(brightness)+', Someone Home:'+str(someoneHome)
 		except:
-			print("Life Error")
-			#print(someoneHome)
+			print "Life Error"
+			#print someoneHome
 			#id = circles[0]['id']
 			#circle = api.get_circle(id)"""
 		time.sleep(1)
@@ -299,7 +299,7 @@ try:
 				lightsFromAlarm = alarm.getLights()
 				brightness = lightsFromAlarm[1]
 				for i in range(strip.numPixels()):
-					#print(alarm.getLights())
+					#print alarm.getLights()
 					strip.setPixelColor(i,  lightsFromAlarm[0])
 					strip2.setPixelColor(i, lightsFromAlarm[0])
 		if brightnessStepsTaken == brightnessSpeed and brightness!=currentBrightness:
@@ -326,8 +326,8 @@ try:
 			if scene == 'no scene':
 				rgb = colorsys.hsv_to_rgb(float(color['hue']) / 360.0, float(color['saturation']), float(color['brightness']))
 				# currentColors[0][i] = rgb
-				# print(stepsTaken[i]==speed)
-				#print(rgb)
+				# print stepsTaken[i]==speed
+				#print rgb
 				if stepsTaken == speed and (abs(currentColor[0] - rgb[0])>.001 or abs(currentColor[1] - rgb[1])>.001 or abs(currentColor[2] - rgb[2])>.001):  # we are done and it just changed, we need to calcualte new deltas and reset stepsTaken
 					deltaColor[0] = (rgb[0] - currentColor[0]) / speed  # G, it will take 'speed' steps to get to proper color
 					deltaColor[1] = (rgb[1] - currentColor[1]) / speed  # R
@@ -339,7 +339,7 @@ try:
 					currentColor[0] = currentColor[0] + deltaColor[0]
 					currentColor[1] = currentColor[1] + deltaColor[1]
 					currentColor[2] = currentColor[2] + deltaColor[2]
-				#print(str(deltaColor[1])+":"+str(currentColor[1])+":"+str(stepsTaken))
+				#print str(deltaColor[1])+":"+str(currentColor[1])+":"+str(stepsTaken)
 			for i in range(strip.numPixels()):
 				colorRGB = [0,0]
 				if scene == 'scene1':
@@ -400,7 +400,7 @@ try:
 						colorRGB[1] = 0
 				strip.setPixelColor(i, colorRGB[0])
 				strip2.setPixelColor(i, colorRGB[1])
-		#print(time.time())
+		#print time.time()
 		strip.setBrightness(int(currentBrightness*2.55))
 		strip2.setBrightness(int(currentBrightness*2.55))
 		strip.show()

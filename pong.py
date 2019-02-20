@@ -23,7 +23,7 @@ class Pong(controller.Controller):
         self.backgroundPixels = [backgroundColor for _ in range(PIXELS_PER_STRING - self.wallNumPixels)]
         self.wallPixels = [wallColor for _ in range(self.wallNumPixels)]
 
-        self.lights = {
+        self.outputs = {
             "lights": self.getLights(),
             "laser": self.getLaser()
         }
@@ -33,16 +33,19 @@ class Pong(controller.Controller):
 
     def getLights(self):
 
+        # Make left wall
         leftY = int(self.left.pos * (PIXELS_PER_STRING / config["ceiling_size"][1]) - self.wallNumPixels / 2)
         leftColumn = self.backgroundPixels[:]
         leftColumn[leftY:leftY] = self.wallPixels
 
+        # Make right wall
         rightY = int(self.right.pos * (PIXELS_PER_STRING / config["ceiling_size"][1]) - self.wallNumPixels / 2)
         rightColumn = self.backgroundPixels[:]
         rightColumn[rightY:rightY] = self.wallPixels
 
         lights = [leftColumn, rightColumn]
 
+        # Add black in the middle
         for i in range(NUM_STRINGS - 2):
             lights.insert(1,[])
 
@@ -63,16 +66,16 @@ class Pong(controller.Controller):
 
     def moveLeftUp(self):
         self.left.move(self.left.pos - .07)
-        # print("left up")
+        # print "left up"
     def moveLeftDown(self):
         self.left.move(self.left.pos + .07)
-        # print("left down")
+        # print "left down"
     def moveRightUp(self):
         self.right.move(self.right.pos - .07)
-        # print("right up")
+        # print "right up"
     def moveRightDown(self):
         self.right.move(self.right.pos + .07)
-        # print("right down")
+        # print "right down"
 
     def tick(self):
         self.ball.move(self.left, self.right)
