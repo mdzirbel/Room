@@ -6,7 +6,7 @@ import Tkinter as tk
 
 # TODO Implement brightness
 
-mode = "ceil" # can be "gui" or "ceil"
+mode = "gui" # can be "gui" or "ceil"
 
 ledUpdateRate = 20
 
