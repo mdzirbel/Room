@@ -2,6 +2,7 @@
 # These import statements are actually used by things which import reference
 import threading
 import time
+import boto3
 from codeTimer import CodeTimer
 
 
@@ -119,6 +120,80 @@ def updateBrightness():
 
 def getBrightness():
     return brightness
+
+
+dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+table = dynamodb.Table('LightsStatus')
+
+
+def getBrightnessAWS():
+    try:
+        response = table.get_item(
+            Key={
+                'InfoId': 'Lights'
+            }
+        )
+    except Exception as e:
+        print e.response['Error']['Message']
+    else:
+        item = response['Item']
+        return int(item['brightness'])
+
+
+def getColorAWS():
+    try:
+        response = table.get_item(
+            Key={
+                'InfoId': 'Lights'
+            }
+        )
+    except Exception as e:
+        print e.response['Error']['Message']
+    else:
+        item = response['Item']
+        return item['color']  # json.dumps(item, indent=4, cls=DecimalEncoder)[0]
+
+
+def setColorAWS(h, s, v):
+    response = table.update_item(
+        Key={
+            'InfoId': 'Lights'
+        },
+        UpdateExpression="set color = :c",
+        ExpressionAttributeValues={
+            ':c': {"saturation": str(s), "hue": str(h), "brightness": str(v)}
+        },
+        ReturnValues="UPDATED_NEW"
+    )
+    return response['Attributes']['color']
+
+
+def setBrightnessAWS(brightness):
+    response = table.update_item(
+        Key={
+            'InfoId': 'Lights'
+        },
+        UpdateExpression="set brightness = :b",
+        ExpressionAttributeValues={
+            ':b': str(brightness)
+        },
+        ReturnValues="UPDATED_NEW"
+    )
+    return response['Attributes']['brightness']
+
+
+def getSceneAWS():
+    try:
+        response = table.get_item(
+            Key={
+                'InfoId': 'Lights'
+            }
+        )
+    except Exception as e:
+        print e.response['Error']['Message']
+    else:
+        item = response['Item']
+        return item['scene']
 
 # Given a rectangle, turn the width and height into x2 and y2 positions for tkinter
 # if center is true, the x and y given are used as the center of the box returned
