@@ -3,9 +3,9 @@ from reference import *
 from neopixel import *
 
 class Lights:
-    def __init__(self, lights, fps, mode="gui"):
+    def __init__(self, lights, fps, mode):
         assert type(fps) is int and 1 <= fps <= 200, "fps should be an integer between 1 and 200, was " + fps
-        assert mode in ["gui", "ceil"], "mode should only be \"gui\" or \"ceil\", was " + mode
+        assert mode in ["gui", "ceil"], "mode should only be 'gui' or 'ceil', was " + mode
 
         self.lights = lights # The lights you want it to put on the ceiling / screen
         self.mode = mode # Whether to use a gui or go to the ceiling. Options are "gui" and "ceil"
@@ -84,7 +84,7 @@ class Lights:
                 elapsedTime = time.time() - startTime # Find the time it took to run move code
                 toWait = 1 / self.fps - elapsedTime # Calculate time to wait for next frame
                 if toWait < -0.02: # If the thread is severely behind, print out a warning
-                    print "lights GUI thread is behind by",round(toWait,2),"seconds (1 / "+str(-round(1/toWait, 2))+" seconds)"
+                    print "Lights thread is behind by",round(toWait,2),"seconds (1 / "+str(-round(1/toWait, 2))+" seconds)"
                 elif toWait < 0: # Continue to the next frame if it's just a little behind
                     pass
                 else: # If it's ahead wait for the next frame
@@ -159,15 +159,11 @@ class Lights:
             if isinstance(leds[stringNum], list): # If it's a list
                 if not leds[stringNum]: # If it's an empty list fill black
                     for pixelNum in range(PIXELS_PER_STRING):
-                        codeTimer.start("set")
                         self.canvas.itemconfig(self.lightsObjects[stringNum][pixelNum], fill="#000000")
-                        codeTimer.print_time("set")
                 else: # Treat it as a regular pixel list
                     for pixelNum in range(PIXELS_PER_STRING):
                         color = toHex(leds[stringNum][pixelNum])
-                        codeTimer.start("regular")
                         self.canvas.itemconfig(self.lightsObjects[stringNum][pixelNum], fill=color)
-                        codeTimer.print_time("regular")
 
             elif isinstance(leds[stringNum], str): # If it's a string with a color set the LED string to that color
                 color = toHex(leds[stringNum])
@@ -179,6 +175,9 @@ class Lights:
                 raise TypeError("Lights is not the right type to be figured out by ceiling.py (updateGUI())")
 
             codeTimer.print_time("oneLightString")
+
+        codeTimer.print_time("allLights")
+
         # Order is somewhat important here. The laser should be rendered on top of the leds
         # If there is a laser, render it
         if laser:

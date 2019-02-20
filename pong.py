@@ -49,7 +49,8 @@ class Pong(controller.Controller):
         for i in range(NUM_STRINGS - 2):
             lights.insert(1,[])
 
-        return lights #[leftColumn, [],[],[],[],[],[],[],[],[],[], rightColumn]
+        return ["red", "orange", "yellow", "green", "blue", "purple", "violet", "black", "white", "cyan"]
+        # return lights #[leftColumn, [],[],[],[],[],[],[],[],[],[], rightColumn]
 
     def getLaser(self):
         return self.ball.pos
