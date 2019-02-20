@@ -38,9 +38,6 @@ class Alarm:
 
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('LightsStatus')
-authorization_token = "cFJFcXVnYWJSZXRyZTRFc3RldGhlcnVmcmVQdW1hbUV4dWNyRUh1YzptM2ZydXBSZXRSZXN3ZXJFQ2hBUHJFOTZxYWtFZHI0Vg=="
-username = "maxfojtik@bex.net"
-password = "0517fic"
 #api = life360(authorization_token=authorization_token, username=username, password=password)
 enableLife = False
 
