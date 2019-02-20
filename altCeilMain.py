@@ -31,9 +31,7 @@ class Alarm:
 			brightness = int(((self.timeToRampSlow-self.rampSlow())/self.timeToRampSlow) * self.slowRampBrightness)
 			return Color(255, 255, 255), brightness
 
-#ID:AKIAIRWOF4IT7TVOJHXQ
-#Sec:zH4ePkri9z0aBZcaKn9kyTLK5nA3SwPRvQdiYVbe
-
+#please dont hack me
 
 
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
