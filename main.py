@@ -2,17 +2,18 @@
 from ceiling import Lights
 from reference import *
 from pong import Pong
-import Tkinter as tk
+from general import General
 
 # TODO Implement brightness
 
-mode = "gui" # can be "gui" or "ceil"
 
-ledUpdateRate = 20
+
+ledUpdateRate = 15
 
 beingPressed = [] # this tracks whether the keys for pong are being pressed
 
-currentLightProgram = Pong(beingPressed, "pong") # Create an active pong game with a pointer to the keys being pressed and set its name as "pong"
+#currentLightProgram = Pong(beingPressed, "pong") # Create an active pong game with a pointer to the keys being pressed and set its name as "pong"
+currentLightProgram = General("general") # Create an active pong game with a pointer to the keys being pressed and set its name as "pong"
 
 lightController = Lights(currentLightProgram.outputs, ledUpdateRate, mode)
 

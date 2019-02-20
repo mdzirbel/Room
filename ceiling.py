@@ -1,6 +1,7 @@
-import Tkinter as tk
 from reference import *
-#from neopixel import *
+import Tkinter as tk
+if mode=="ceil":
+    from neopixel import *
 
 class Lights:
     def __init__(self, lights, fps, mode):
@@ -16,7 +17,6 @@ class Lights:
 
 
         if self.mode=="gui":
-
             # Initialize useful variables
             self.laser = None # Initialize the variable which will hold the Tkinter circle for the laser if there is one, or None if there isn't
             self.canvas = None # Initialize the variable which will hold the canvas object
@@ -38,41 +38,46 @@ class Lights:
         self.strip2.begin()
 
         self.ID = [[],[]]
-        stripNum = 4
+        stripNum = 5
         lightNum = 0
         for i in range(LED_COUNT):
-            self.ID[0].append((stripNum, lightNum))
+
+            lightNum += 1
 
             if i%PIXELS_PER_STRING==0:
                 stripNum -= 1
                 lightNum = 0
 
-            lightNum += 1
+            self.ID[0].append((stripNum, lightNum))
 
 
-        stripNum = 5
+
+        stripNum = 4
         lightNum = 0
         for i in range(LED_COUNT):
-            self.ID[1].append((stripNum, lightNum))
+            lightNum += 1
 
             if i%PIXELS_PER_STRING==0:
                 stripNum += 1
                 lightNum = 0
 
-            lightNum += 1
+            self.ID[1].append((stripNum, lightNum))
 
     def updateLEDs(self):
         leds, laser = getLedsAndLights(self.lights)
         currentStripColor0 = 0
         currentStripColor1 = 0
+        useStrip0 = False
+        useStrip1 = False
         for i in range(LED_COUNT):
             if i%PIXELS_PER_STRING==0:
                 if isinstance(leds[4-i/PIXELS_PER_STRING], str):
                     color = toRGB(leds[4-i/PIXELS_PER_STRING])
                     currentStripColor0 = Color(int(color[1]*255), int(color[0]*255), int(color[2]*255))
+                    useStrip0 = True
                 else:
-                    currentStripColor0 = 0
-            if currentStripColor0:
+                    useStrip0 = False
+            if useStrip0:
                 self.strip.setPixelColor(i, currentStripColor0)
             else:
                 stripIndex, lightIndex = self.ID[0][i]
@@ -84,15 +89,17 @@ class Lights:
                 if isinstance(leds[5+i/PIXELS_PER_STRING], str):
                     color = toRGB(leds[5+i/PIXELS_PER_STRING])
                     currentStripColor1 = Color(int(color[1]*255), int(color[0]*255), int(color[2]*255))
+                    useStrip1 = True
                 else:
-                    currentStripColor1 = 0
-            print currentStripColor1,i
-            if currentStripColor1:
-                self.strip.setPixelColor(i, currentStripColor1)
+                    useStrip1 = False
+            if useStrip1:
+                self.strip2.setPixelColor(i, currentStripColor1)
             else:
                 stripIndex, lightIndex = self.ID[1][i]
                 color = toRGB(leds[stripIndex][lightIndex])
                 self.strip2.setPixelColor(i, Color(int(color[1]*255), int(color[0]*255), int(color[2]*255)))
+        self.strip.show()
+        self.strip2.show()
     # Keep in mind that:
     # self.lights should be unpacked to lights and laser using the helper function getLedsAndLights(lights) at the bottom of this file
     # If the spot where a string of leds could be has a string, that should be a color to set the whole string to, eg lights = ["black", "blue", "green"]
@@ -109,7 +116,7 @@ class Lights:
                 self.update()  # Update the gui / physical leds
 
                 elapsedTime = time.time() - startTime # Find the time it took to run move code
-                toWait = 1 / self.fps - elapsedTime # Calculate time to wait for next frame
+                toWait = 1.0 / self.fps - elapsedTime # Calculate time to wait for next frame
                 if toWait < -0.02: # If the thread is severely behind, print out a warning
                     print "Lights thread is behind by",round(toWait,2),"seconds (1 / "+str(-round(1/toWait, 2))+" seconds)"
                 elif toWait < 0: # Continue to the next frame if it's just a little behind
@@ -176,7 +183,6 @@ class Lights:
     def updateGUI(self):
 
         leds, laser = getLedsAndLights(self.lights)
-
         # Render lights
         # print self.lights
         codeTimer.start("allLights")
@@ -228,10 +234,13 @@ class Lights:
 # Unpack lights to leds and laser
 def getLedsAndLights(lights):
     if isinstance(lights, dict):  # If it's a dictionary it should have a lights and a laser, otherwise it should be the lights if it's a string
-        leds = lights["lights"]
         laser = lights["laser"]
+        if isinstance(lights["lights"], str):  # If it's a string it indicates that all LEDS should be that color, so make a list of it to be handled later
+            leds = [lights["lights"] for _ in range(NUM_STRINGS)]
+        else:
+            leds = lights["lights"]
     elif isinstance(lights, str):  # If it's a string it indicates that all LEDS should be that color, so make a list of it to be handled later
-        leds = [str for _ in range(NUM_STRINGS)]
+        leds = [lights for _ in range(NUM_STRINGS)]
         laser = None
     else:  # Default is to assume that self.lights is just the leds and there is no laser
         leds = lights

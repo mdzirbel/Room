@@ -4,6 +4,10 @@ import threading
 import time
 from codeTimer import CodeTimer
 
+
+mode = "ceil" # can be "gui" or "ceil"
+
+
 codeTimer = CodeTimer()
 
 runThreads = True # Used to stop the execution of all threads
