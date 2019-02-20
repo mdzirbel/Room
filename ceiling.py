@@ -1,6 +1,6 @@
 import Tkinter as tk
 from reference import *
-from neopixel import *
+#from neopixel import *
 
 class Lights:
     def __init__(self, lights, fps, mode):
@@ -11,8 +11,7 @@ class Lights:
         self.mode = mode # Whether to use a gui or go to the ceiling. Options are "gui" and "ceil"
         self.fps = fps
 
-        self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 0)
-        self.strip2 = Adafruit_NeoPixel(LED_COUNT, LED_PIN2, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 1)
+
 
 
 
@@ -26,6 +25,8 @@ class Lights:
             self.initializeGUI()
             self.updateGUI()
         else:
+            self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 0)
+            self.strip2 = Adafruit_NeoPixel(LED_COUNT, LED_PIN2, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 1)
             self.initializeLEDs()
             self.updateLEDs()
 
@@ -61,14 +62,37 @@ class Lights:
             lightNum += 1
 
     def updateLEDs(self):
+        leds, laser = getLedsAndLights(self.lights)
+        currentStripColor0 = 0
+        currentStripColor1 = 0
         for i in range(LED_COUNT):
-            leds, laser = getLedsAndLights(self.lights)
+            if i%PIXELS_PER_STRING==0:
+                if isinstance(leds[4-i/PIXELS_PER_STRING], str):
+                    color = toRGB(leds[4-i/PIXELS_PER_STRING])
+                    currentStripColor0 = Color(int(color[1]*255), int(color[0]*255), int(color[2]*255))
+                else:
+                    currentStripColor0 = 0
+            if currentStripColor0:
+                self.strip.setPixelColor(i, currentStripColor0)
+            else:
+                stripIndex, lightIndex = self.ID[0][i]
+                color = toRGB(leds[stripIndex][lightIndex])
+                self.strip.setPixelColor(i, Color(int(color[1]*255), int(color[0]*255), int(color[2]*255)))
 
-            stripIndex, lightIndex = self.ID[0][i]
-            self.strip.setPixelColor(i, leds[stripIndex][lightIndex])
 
-            stripIndex, lightIndex = self.ID[1][i]
-            self.strip2.setPixelColor(i, leds[stripIndex][lightIndex])
+            if i%PIXELS_PER_STRING==0:
+                if isinstance(leds[5+i/PIXELS_PER_STRING], str):
+                    color = toRGB(leds[5+i/PIXELS_PER_STRING])
+                    currentStripColor1 = Color(int(color[1]*255), int(color[0]*255), int(color[2]*255))
+                else:
+                    currentStripColor1 = 0
+            print currentStripColor1,i
+            if currentStripColor1:
+                self.strip.setPixelColor(i, currentStripColor1)
+            else:
+                stripIndex, lightIndex = self.ID[1][i]
+                color = toRGB(leds[stripIndex][lightIndex])
+                self.strip2.setPixelColor(i, Color(int(color[1]*255), int(color[0]*255), int(color[2]*255)))
     # Keep in mind that:
     # self.lights should be unpacked to lights and laser using the helper function getLedsAndLights(lights) at the bottom of this file
     # If the spot where a string of leds could be has a string, that should be a color to set the whole string to, eg lights = ["black", "blue", "green"]
