@@ -1,6 +1,6 @@
 import Tkinter as tk
 from reference import *
-
+from neopixel import *
 
 class Lights:
     def __init__(self, lights, fps, mode="gui"):
@@ -10,6 +10,11 @@ class Lights:
         self.lights = lights # The lights you want it to put on the ceiling / screen
         self.mode = mode # Whether to use a gui or go to the ceiling. Options are "gui" and "ceil"
         self.fps = fps
+
+        self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 0)
+        self.strip2 = Adafruit_NeoPixel(LED_COUNT, LED_PIN2, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 1)
+
+
 
         if self.mode=="gui":
 
@@ -25,10 +30,42 @@ class Lights:
         pass # TODO Set all lights to off
 
     def initializeLEDs(self):
-        pass # TODO Add any initialization which may need to be written
+        self.strip.begin()
+        self.strip2.begin()
+
+        self.ID = [[],[]]
+        stripNum = 4
+        lightNum = 0
+        for i in range(LED_COUNT):
+            self.ID[0].append((stripNum, lightNum))
+
+            if i%PIXELS_PER_STRING==0:
+                stripNum -= 1
+                lightNum = 0
+
+            lightNum += 1
+
+
+        stripNum = 5
+        lightNum = 0
+        for i in range(LED_COUNT):
+            self.ID[1].append((stripNum, lightNum))
+
+            if i%PIXELS_PER_STRING==0:
+                stripNum += 1
+                lightNum = 0
+
+            lightNum += 1
 
     def updateLEDs(self):
-        pass # TODO Write function
+        for i in range(LED_COUNT):
+            leds, laser = getLedsAndLights(self.lights)
+
+            stripIndex, lightIndex = self.ID[0][i]
+            self.strip.setPixelColor(i, leds[stripIndex][lightIndex])
+
+            stripIndex, lightIndex = self.ID[1][i]
+            self.strip2.setPixelColor(i, leds[stripIndex][lightIndex])
     # Keep in mind that:
     # self.lights should be unpacked to lights and laser using the helper function getLedsAndLights(lights) at the bottom of this file
     # If the spot where a string of leds could be has a string, that should be a color to set the whole string to, eg lights = ["black", "blue", "green"]
