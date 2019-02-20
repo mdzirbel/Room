@@ -12,10 +12,6 @@ class Lights:
         self.mode = mode # Whether to use a gui or go to the ceiling. Options are "gui" and "ceil"
         self.fps = fps
 
-
-
-
-
         if self.mode=="gui":
             # Initialize useful variables
             self.laser = None # Initialize the variable which will hold the Tkinter circle for the laser if there is one, or None if there isn't
@@ -156,6 +152,7 @@ class Lights:
 
             # Calculate this ahead of time to cut down on time
             x = int(stringNum / (NUM_STRINGS - 1) * (relevantScreenSize[0] - ledSize[0])) + screenBorder["left"]
+            print("x:",x,"/", relevantScreenSize)
             relevantY = relevantScreenSize[1] - ledSize[1]
 
             self.lightsObjects.append([])

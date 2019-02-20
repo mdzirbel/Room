@@ -5,7 +5,7 @@ import time
 from codeTimer import CodeTimer
 
 
-mode = "ceil" # can be "gui" or "ceil"
+mode = "gui" # can be "gui" or "ceil"
 
 
 codeTimer = CodeTimer()
