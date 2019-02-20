@@ -151,15 +151,15 @@ class Lights:
         for stringNum in range(NUM_STRINGS):
 
             # Calculate this ahead of time to cut down on time
-            x = int(stringNum / (NUM_STRINGS - 1) * (relevantScreenSize[0] - ledSize[0])) + screenBorder["left"]
-            print("x:",x,"/", relevantScreenSize)
+            x = int(stringNum / (NUM_STRINGS - 1.) * (relevantScreenSize[0] - ledSize[0])) + screenBorder["left"]
+            print("x:",x,"/",relevantScreenSize)
             relevantY = relevantScreenSize[1] - ledSize[1]
 
             self.lightsObjects.append([])
 
             for ledNum in range(PIXELS_PER_STRING):
                 # (led number / total leds) * (relevant screen size to scale)
-                y = int((ledNum+1) / PIXELS_PER_STRING * relevantY) + screenBorder["top"]
+                y = int((ledNum+1.) / PIXELS_PER_STRING * relevantY) + screenBorder["top"]
 
                 newPixel = self.canvas.create_rectangle(rectalize(x, y, ledSize[0], ledSize[1]), fill=color)
                 self.lightsObjects[stringNum].append(newPixel)
