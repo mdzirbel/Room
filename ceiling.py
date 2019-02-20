@@ -109,7 +109,7 @@ class Lights:
                 self.update()  # Update the gui / physical leds
 
                 elapsedTime = time.time() - startTime # Find the time it took to run move code
-                toWait = 1 / self.fps - elapsedTime # Calculate time to wait for next frame
+                toWait = 1.0 / self.fps - elapsedTime # Calculate time to wait for next frame
                 if toWait < -0.02: # If the thread is severely behind, print out a warning
                     print "Lights thread is behind by",round(toWait,2),"seconds (1 / "+str(-round(1/toWait, 2))+" seconds)"
                 elif toWait < 0: # Continue to the next frame if it's just a little behind
