@@ -7,6 +7,7 @@ from codeTimer import CodeTimer
 codeTimer = CodeTimer()
 
 runThreads = True # Used to stop the execution of all threads
+brightness = 100
 
 # LED strip configuration:
 NUM_STRINGS    = 10      # Number of strings total
@@ -108,6 +109,13 @@ def stopAllThreads():
 def threadsShouldBeRunning():
     return runThreads
 
+def updateBrightness():
+    global brightness
+    brightness = getBrightnessAWS()
+
+def getBrightness():
+    return brightness
+
 # Given a rectangle, turn the width and height into x2 and y2 positions for tkinter
 # if center is true, the x and y given are used as the center of the box returned
 def rectalize(x, y, width, height, center=False):
@@ -115,29 +123,3 @@ def rectalize(x, y, width, height, center=False):
         return x-width/2,y-height/2,x+width/2,y+height/2
     else:
         return x,y,x+width,y+height
-
-"""
-Just going to put this here for a bit of reference
-class Test:
-    def __init__(self, numStrips=numStrings, numLedsPerStrip=numPixelsPerString):
-        self.lights = []
-        self.updatingThread = None
-        self.red = 0
-
-        # # Generates a basic set of lights
-        for string in range(numStrips):  # range(number of strings)
-            self.lights.append([])
-            for led in range(numLedsPerStrip):  # range(number of leds)
-                self.lights[string].append((255, 0, 0))
-
-    def update(self):
-
-        self.red += 100
-        if self.red > 255: self.red = 0
-
-        print self.red
-
-        for stringNum in range(len(self.lights)):
-            for ledNum in range(len(self.lights[stringNum])):
-                self.lights[stringNum][ledNum] = (self.red, 0, 0)
-"""

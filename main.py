@@ -44,6 +44,10 @@ def mainLoop():
 
             time.sleep(1)
 
+            updateBrightness()
+            lightController.strip.setBrightness(brightness*2.55)
+            lightController.strip2.setBrightness(brightness * 2.55)
+
     finally:
         stopAllThreads()
         currentLightProgram.stopThread()
