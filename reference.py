@@ -51,6 +51,10 @@ stringToRGB = {
     "red": (255,0,0),
     "green": (0,255,0),
     "yellow": (255,255,0),
+    "orange": (255, 165, 0),
+    "purple": (128,0,128),
+    "violet": (159, 0, 255),
+    "cyan": (0,255,255),
 }
 
 def getLaserCoords(*pos):
@@ -75,6 +79,17 @@ def toHex(color):
     else:
         assert False, "Color not recognized: " + str(color)
 
+def toRGB(color):
+    if isinstance(color, tuple) and len(color)==3: # If it's an rgb tuple
+        return color
+    elif isinstance(color, str):
+        if color[0] == '#': # If it's hex then just return it
+            return tuple(int(color[i:i+2], 16) for i in (0, 2 ,4))
+        else:
+            return stringToRGB[color]
+    else:
+        assert False, "Color not recognized: " + str(color)
+
 def stopAllThreads():
     global runThreads
     runThreads = False
@@ -83,6 +98,7 @@ def threadsShouldBeRunning():
     return runThreads
 
 # Given a rectangle, turn the width and height into x2 and y2 positions for tkinter
+# if center is true, the x and y given are used as the center of the box returned
 def rectalize(x, y, width, height, center=False):
     if center:
         return x-width/2,y-height/2,x+width/2,y+height/2

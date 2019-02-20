@@ -1,7 +1,7 @@
 import time
 
 # The ids to not track, so that timing debugging can be turned off easily from here
-dontTrack = ["set","regular", "oneLightString"]
+noTrack = ["set", "regular", "oneLightString", "allLights"]
 
 roundPrecision = 8 # Number of decimal places to save/print
 
@@ -11,15 +11,15 @@ class CodeTimer:
         self.startTimes = {}
 
     def start(self, trackId="current"):
-        if not trackId in dontTrack:
+        if not trackId in noTrack:
             self.startTimes[trackId] = round(time.time(), roundPrecision)
 
     def get(self, trackId="current"):
-        if not trackId in dontTrack:
+        if not trackId in noTrack:
             return round(time.time() - self.startTimes[trackId], roundPrecision)
 
     def print_time(self, trackId="current"):
-        if not trackId in dontTrack:
+        if not trackId in noTrack:
             print str(self.get(trackId))+"s since starting timer: \""+str(trackId)+"\""
 
 
