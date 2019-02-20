@@ -25,6 +25,9 @@ class Lights:
 
             self.initializeGUI()
             self.updateGUI()
+        else:
+            self.initializeLEDs()
+            self.updateLEDs()
 
     def stop(self):
         pass # TODO Set all lights to off
