@@ -4,7 +4,7 @@ import colorsys
 
 class General(controller.Controller):
     def __init__(self, name, fps=1, startImmediately=True):
-        controller.Controller.__init__(self, name, fps)
+        controller.Controller.__init__(self, name, fps, True)
 
         self.lights = []
         for i in range(NUM_STRINGS):

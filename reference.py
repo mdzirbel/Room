@@ -7,6 +7,9 @@ from codeTimer import CodeTimer
 
 mode = "gui" # can be "gui" or "ceil"
 
+lights_thread_print_when_behind_s = .03
+control_thread_print_when_behind_s = .02
+
 codeTimer = CodeTimer()
 
 runThreads = True # Used to stop the execution of all threads

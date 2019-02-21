@@ -78,6 +78,9 @@ class Pong(controller.Controller):
         self.right.move(self.right.pos + .07)
         # print "right down"
 
+    def changeWallColor(self, color):
+        self.wallPixels = [color for _ in range(self.wallNumPixels)]
+
     def tick(self):
         self.ball.move(self.left, self.right)
         self.ball.speedUp()
@@ -103,7 +106,7 @@ class Ball:
         if self.pos[1]<=0 or self.pos[1]>=config["ceiling_size"][1]:
             self.vel[1] = -self.vel[1]
 
-        # If you may be moving out of bounds
+        # If you are heading out of bounds
         if self.pos[0] <= 0 or self.pos[0] >= config["ceiling_size"][0]:
 
             # If you hit a player wall
@@ -115,6 +118,7 @@ class Ball:
                 offset = (self.pos[1] - left.pos) / left.height * 2
                 self.vel[1] = - self.vel[0] * offset * 1.2
                 self.vel[0] = -self.vel[0]
+
             else: # You moved out of bounds
                 self.startBall()
 

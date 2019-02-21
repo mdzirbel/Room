@@ -4,7 +4,7 @@ from reference import *
 from pong import Pong
 from general import General
 
-ledUpdateRate = 15
+ledUpdateRate = 30
 
 beingPressed = [] # this tracks whether the keys for pong are being pressed
 
@@ -42,9 +42,10 @@ def mainLoop():
             time.sleep(1)
 
             if mode == "ceil":
+
                 updateBrightness()
-                lightController.strip.setBrightness(int(brightness*2.55))
-                lightController.strip2.setBrightness(int(brightness * 2.55))
+                lightController.strip0.setBrightness(int(brightness * 2.55))
+                lightController.strip1.setBrightness(int(brightness * 2.55))
 
     finally:
         stopAllThreads()
