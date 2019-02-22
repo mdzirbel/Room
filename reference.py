@@ -4,8 +4,10 @@ import threading
 import time
 import boto3
 from codeTimer import CodeTimer
+import os
 
-mode = "gui" # can be "gui" or "ceil"
+mode = "ceil" # can be "gui" or "ceil"
+if os.name == 'nt': mode = "gui"
 
 lights_thread_print_when_behind_s = .03
 control_thread_print_when_behind_s = .02

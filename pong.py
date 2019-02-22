@@ -1,5 +1,6 @@
 from reference import *
 import controller
+import random
 
 class Pong(controller.Controller):
 
@@ -93,14 +94,16 @@ class Ball:
         self.vel = [.02, .02]
         self.size = [25, 25]
 
-    def startBall(self):
-        self.pos = [config["ceiling_size"][0]/2, config["ceiling_size"][1]/2] # center of the ball
-        self.vel = [.03,.03]
+    def restartBall(self):
+        # self.pos is changed carefully without changing the pointer to the information
+        self.pos[0] = config["ceiling_size"][0] / 2. # center x of the ball
+        self.pos[1] = config["ceiling_size"][1] / 2. # center y of the ball
+        self.vel = [random.choice([.03, -.03]),random.randint(-40,41)*.0001]
         self.size = [25, 25]
 
     def move(self, left, right):
-        self.pos[0] = self.pos[0] + self.vel[0]
-        self.pos[1] = self.pos[1] + self.vel[1]
+        self.pos[0] += self.vel[0]
+        self.pos[1] += self.vel[1]
 
         # If you hit the top or bottom
         if self.pos[1]<=0 or self.pos[1]>=config["ceiling_size"][1]:
@@ -120,7 +123,7 @@ class Ball:
                 self.vel[0] = -self.vel[0]
 
             else: # You moved out of bounds
-                self.startBall()
+                self.restartBall()
 
     def speedUp(self):
         self.vel[0] *= 1.0015
