@@ -98,7 +98,7 @@ class Ball:
         # self.pos is changed carefully without changing the pointer to the information
         self.pos[0] = config["ceiling_size"][0] / 2. # center x of the ball
         self.pos[1] = config["ceiling_size"][1] / 2. # center y of the ball
-        self.vel = [random.choice([.03, -.03]),random.randint(-40,41)*.0001]
+        self.vel = [random.choice([.03, -.03]),random.randint(-40,41)*.001]
         self.size = [25, 25]
 
     def move(self, left, right):
