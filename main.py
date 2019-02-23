@@ -4,11 +4,7 @@ from reference import *
 from pong import Pong
 from general import General
 
-# TODO Implement brightness
-
-
-
-ledUpdateRate = 15
+ledUpdateRate = 30
 
 beingPressed = [] # this tracks whether the keys for pong are being pressed
 

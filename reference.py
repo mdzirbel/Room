@@ -4,10 +4,13 @@ import threading
 import time
 import boto3
 from codeTimer import CodeTimer
-
+import os
 
 mode = "ceil" # can be "gui" or "ceil"
+if os.name == 'nt': mode = "gui"
 
+lights_thread_print_when_behind_s = .03
+control_thread_print_when_behind_s = .02
 
 codeTimer = CodeTimer()
 
@@ -17,7 +20,7 @@ brightness = 100
 # LED strip configuration:
 NUM_STRINGS    = 10      # Number of strings total
 PIXELS_PER_STRING = 150  # Number of pixels per led string
-LED_COUNT      = NUM_STRINGS/2 * PIXELS_PER_STRING  # Number of LED pixels per side.
+LED_COUNT      = NUM_STRINGS / 2 * PIXELS_PER_STRING  # Number of LED pixels per side.
 LED_PIN        = 12      # GPIO pin connected to the pixels (18 uses PWM!).
 LED_PIN2       = 13      # GPIO pin connected to the pixels (18 uses PWM!).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)

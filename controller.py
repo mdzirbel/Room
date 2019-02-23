@@ -8,7 +8,7 @@ import time
 
 class Controller(object):
 
-    def __init__(self, name, fps):
+    def __init__(self, name, fps, dont_print_behind=False):
         self.frameNum = 0
         self.name = name # The name of the thread, eg. "pong". Default "unnamed". Used for identifying/debugging purposed
         self.fps = fps # The fps to run at. Most use 30
@@ -50,10 +50,11 @@ class Controller(object):
                 self.updateLights()
                 self.frameNum += 1
                 if self.frameNum%self.fps == 0:
-                    print self.frameNum
+                    pass
+                    # print self.frameNum
                 elapsedTime = time.time() - startTime  # Find the time it took to run move code
                 toWait = 1.0 / self.fps - elapsedTime  # Calculate time to wait for next frame
-                if toWait < -0.02:  # If the thread is severely behind, print out a warning
+                if toWait < -control_thread_print_when_behind_s:  # If the thread is severely behind, print out a warning
                     print self.name, "thread is behind by", round(toWait, 2), "seconds (1 / " + str(-round(1 / toWait, 2)) + " seconds)"
                 elif toWait < 0:  # Continue to the next frame if it's just a little behind
                     pass

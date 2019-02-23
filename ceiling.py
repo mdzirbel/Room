@@ -12,10 +12,6 @@ class Lights:
         self.mode = mode # Whether to use a gui or go to the ceiling. Options are "gui" and "ceil"
         self.fps = fps
 
-
-
-
-
         if self.mode=="gui":
             # Initialize useful variables
             self.laser = None # Initialize the variable which will hold the Tkinter circle for the laser if there is one, or None if there isn't
@@ -25,8 +21,8 @@ class Lights:
             self.initializeGUI()
             self.updateGUI()
         else:
-            self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 0)
-            self.strip2 = Adafruit_NeoPixel(LED_COUNT, LED_PIN2, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 1)
+            self.strip0 = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 0)
+            self.strip1 = Adafruit_NeoPixel(LED_COUNT, LED_PIN2, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 1)
             self.initializeLEDs()
             self.updateLEDs()
 
@@ -34,8 +30,8 @@ class Lights:
         pass # TODO Set all lights to off
 
     def initializeLEDs(self):
-        self.strip.begin()
-        self.strip2.begin()
+        self.strip0.begin()
+        self.strip1.begin()
 
         self.ID = [[],[]]
         stripNum = 5
@@ -77,12 +73,13 @@ class Lights:
                     useStrip0 = True
                 else:
                     useStrip0 = False
+
             if useStrip0:
-                self.strip.setPixelColor(i, currentStripColor0)
+                self.strip0.setPixelColor(i, currentStripColor0)
             else:
                 stripIndex, lightIndex = self.ID[0][i]
                 color = toRGB(leds[stripIndex][lightIndex])
-                self.strip.setPixelColor(i, Color(int(color[1]*255), int(color[0]*255), int(color[2]*255)))
+                self.strip0.setPixelColor(i, Color(int(color[1] * 255), int(color[0] * 255), int(color[2] * 255)))
 
 
             if i%PIXELS_PER_STRING==0:
@@ -92,14 +89,15 @@ class Lights:
                     useStrip1 = True
                 else:
                     useStrip1 = False
+
             if useStrip1:
-                self.strip2.setPixelColor(i, currentStripColor1)
+                self.strip1.setPixelColor(i, currentStripColor1)
             else:
                 stripIndex, lightIndex = self.ID[1][i]
                 color = toRGB(leds[stripIndex][lightIndex])
-                self.strip2.setPixelColor(i, Color(int(color[1]*255), int(color[0]*255), int(color[2]*255)))
-        self.strip.show()
-        self.strip2.show()
+                self.strip1.setPixelColor(i, Color(int(color[1] * 255), int(color[0] * 255), int(color[2] * 255)))
+        self.strip0.show()
+        self.strip1.show()
     # Keep in mind that:
     # self.lights should be unpacked to lights and laser using the helper function getLedsAndLights(lights) at the bottom of this file
     # If the spot where a string of leds could be has a string, that should be a color to set the whole string to, eg lights = ["black", "blue", "green"]
@@ -117,7 +115,7 @@ class Lights:
 
                 elapsedTime = time.time() - startTime # Find the time it took to run move code
                 toWait = 1.0 / self.fps - elapsedTime # Calculate time to wait for next frame
-                if toWait < -0.02: # If the thread is severely behind, print out a warning
+                if toWait < -lights_thread_print_when_behind_s: # If the thread is severely behind, print out a warning
                     print "Lights thread is behind by",round(toWait,2),"seconds (1 / "+str(-round(1/toWait, 2))+" seconds)"
                 elif toWait < 0: # Continue to the next frame if it's just a little behind
                     pass
@@ -155,16 +153,16 @@ class Lights:
         for stringNum in range(NUM_STRINGS):
 
             # Calculate this ahead of time to cut down on time
-            x = int(stringNum / (NUM_STRINGS - 1) * (relevantScreenSize[0] - ledSize[0])) + screenBorder["left"]
+            x = int(stringNum / (NUM_STRINGS - 1.) * (relevantScreenSize[0] - ledSize[0])) + screenBorder["left"]
             relevantY = relevantScreenSize[1] - ledSize[1]
 
             self.lightsObjects.append([])
 
             for ledNum in range(PIXELS_PER_STRING):
                 # (led number / total leds) * (relevant screen size to scale)
-                y = int((ledNum+1) / PIXELS_PER_STRING * relevantY) + screenBorder["top"]
+                y = int((ledNum+1.) / PIXELS_PER_STRING * relevantY) + screenBorder["top"]
 
-                newPixel = self.canvas.create_rectangle(rectalize(x, y, ledSize[0], ledSize[1]), fill=color)
+                newPixel = self.canvas.create_rectangle(rectalize(x, y, ledSize[0], ledSize[1]), fill=color, outline="")
                 self.lightsObjects[stringNum].append(newPixel)
 
         # Order is somewhat important here. The laser should be rendered on top of the leds
