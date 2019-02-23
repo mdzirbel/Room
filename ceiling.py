@@ -202,7 +202,8 @@ class Lights:
                         self.canvas.itemconfig(self.lightsObjects[stringNum][pixelNum], fill="#000000")
                 else: # Treat it as a regular pixel list
                     for pixelNum in range(PIXELS_PER_STRING):
-                        color = toHex((leds[stringNum][pixelNum][0]*brightness/100, leds[stringNum][pixelNum][1]*brightness/100, leds[stringNum][pixelNum][2]*brightness/100))
+                        color = toRGB(leds[stringNum][pixelNum])
+                        color = toHex((color[0]*brightness/100, color[1]*brightness/100, color[2]*brightness/100))
                         self.canvas.itemconfig(self.lightsObjects[stringNum][pixelNum], fill=color)
 
             elif isinstance(leds[stringNum], str): # If it's a string with a color set the LED string to that color
