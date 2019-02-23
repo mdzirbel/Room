@@ -18,8 +18,8 @@ class Pong(controller.Controller):
         self.wallNumPixels = int((PIXELS_PER_STRING / 2.5) * self.height) # For reference
 
         # For quick use later we now make the arrays
-        wallColor = toHex(wallColor)
-        backgroundColor = toHex(backgroundColor)
+        wallColor = wallColor
+        backgroundColor = backgroundColor
 
         self.backgroundPixels = [backgroundColor for _ in range(PIXELS_PER_STRING - self.wallNumPixels)]
         self.wallPixels = [wallColor for _ in range(self.wallNumPixels)]
