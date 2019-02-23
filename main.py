@@ -46,8 +46,9 @@ def mainLoop():
             time.sleep(1)
 
             updateBrightness()
-            lightController.strip.setBrightness(int(brightness*2.55))
-            lightController.strip2.setBrightness(int(brightness * 2.55))
+            if mode == "ceil":
+                lightController.strip.setBrightness(int(brightness*2.55))
+                lightController.strip2.setBrightness(int(brightness * 2.55))
 
     finally:
         stopAllThreads()
