@@ -104,6 +104,7 @@ def toRGB(color):
         return color
     elif isinstance(color, str):
         if color[0] == '#': # If it's hex then just return it
+            color = color.lstrip('#')
             return tuple(int(color[i:i+2], 16) for i in (0, 2 ,4))
         else:
             return stringToRGB[color]

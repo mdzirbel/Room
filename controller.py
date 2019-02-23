@@ -55,7 +55,7 @@ class Controller(object):
                 elapsedTime = time.time() - startTime  # Find the time it took to run move code
                 toWait = 1.0 / self.fps - elapsedTime  # Calculate time to wait for next frame
                 if toWait < -control_thread_print_when_behind_s:  # If the thread is severely behind, print out a warning
-                    print self.name, "thread is behind by", round(toWait, 2), "seconds (1 / " + str(-round(1 / toWait, 2)) + " seconds)"
+                    print self.name, "thread is behind by", -round(toWait, 2), "seconds (1 / " + str(-round(1 / toWait, 2)) + " seconds)"
                 elif toWait < 0:  # Continue to the next frame if it's just a little behind
                     pass
                 else:  # If it's ahead wait for the next frame

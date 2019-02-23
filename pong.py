@@ -18,8 +18,8 @@ class Pong(controller.Controller):
         self.wallNumPixels = int((PIXELS_PER_STRING / 2.5) * self.height) # For reference
 
         # For quick use later we now make the arrays
-        wallColor = toHex(wallColor)
-        backgroundColor = toHex(backgroundColor)
+        wallColor = wallColor
+        backgroundColor = backgroundColor
 
         self.backgroundPixels = [backgroundColor for _ in range(PIXELS_PER_STRING - self.wallNumPixels)]
         self.wallPixels = [wallColor for _ in range(self.wallNumPixels)]
@@ -98,7 +98,7 @@ class Ball:
         # self.pos is changed carefully without changing the pointer to the information
         self.pos[0] = config["ceiling_size"][0] / 2. # center x of the ball
         self.pos[1] = config["ceiling_size"][1] / 2. # center y of the ball
-        self.vel = [random.choice([.03, -.03]),random.randint(-40,41)*.0001]
+        self.vel = [random.choice([.03, -.03]),random.randint(-40,41)*.001]
         self.size = [25, 25]
 
     def move(self, left, right):
