@@ -60,7 +60,7 @@ class Lights:
             self.ID[1].append((stripNum, lightNum))
 
     def updateLEDs(self):
-        leds, laser = getLedsAndLights(self.lights)
+        leds, laser = unpackLedsAndLaser(self.lights)
         currentStripColor0 = 0
         currentStripColor1 = 0
         useStrip0 = False
@@ -145,7 +145,7 @@ class Lights:
         self.canvas.focus_set()
         self.canvas.pack()
 
-        leds, laser = getLedsAndLights(self.lights)
+        leds, laser = unpackLedsAndLaser(self.lights)
 
         color = toHex("black") # Start all lights with the default starting color of black
 
@@ -180,7 +180,7 @@ class Lights:
     # Changes the GUI to reflect the current position of self.lights. Assumes that there is a gui
     def updateGUI(self):
 
-        leds, laser = getLedsAndLights(self.lights)
+        leds, laser = unpackLedsAndLaser(self.lights)
         # Render lights
         # print self.lights
         codeTimer.start("allLights")
@@ -232,7 +232,7 @@ class Lights:
         # moveServo1(xAngle)
 
 # Unpack lights to leds and laser
-def getLedsAndLights(lights):
+def unpackLedsAndLaser(lights):
     if isinstance(lights, dict):  # If it's a dictionary it should have a lights and a laser, otherwise it should be the lights if it's a string
         laser = lights["laser"]
         if isinstance(lights["lights"], str):  # If it's a string it indicates that all LEDS should be that color, so make a list of it to be handled later
