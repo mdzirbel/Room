@@ -23,7 +23,7 @@ class General(controller.Controller):
         rgb = colorsys.hsv_to_rgb(float(color['hue']) / 360.0, float(color['saturation']), float(color['brightness']))
         for i in range(NUM_STRINGS):
             for k in range(PIXELS_PER_STRING):
-                self.lights[i][k] = rgb
+                self.lights[i][k] = (rgb[0]*255, rgb[1]*255, rgb[2]*255)
 
     def getLights(self):
         return self.lights

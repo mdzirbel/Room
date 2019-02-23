@@ -8,8 +8,8 @@ ledUpdateRate = 30
 
 beingPressed = [] # this tracks whether the keys for pong are being pressed
 
-#currentLightProgram = Pong(beingPressed, "pong") # Create an active pong game with a pointer to the keys being pressed and set its name as "pong"
-currentLightProgram = General("general") # Create an active pong game with a pointer to the keys being pressed and set its name as "pong"
+currentLightProgram = Pong(beingPressed, "pong") # Create an active pong game with a pointer to the keys being pressed and set its name as "pong"
+#currentLightProgram = General("general") # Create an active pong game with a pointer to the keys being pressed and set its name as "pong"
 
 lightController = Lights(currentLightProgram.outputs, ledUpdateRate, mode)
 
@@ -42,9 +42,6 @@ def mainLoop():
             time.sleep(1)
 
             updateBrightness()
-            if mode == "ceil":
-                lightController.strip.setBrightness(int(brightness*2.55))
-                lightController.strip2.setBrightness(int(brightness * 2.55))
 
     finally:
         stopAllThreads()

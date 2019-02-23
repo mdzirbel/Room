@@ -61,6 +61,7 @@ class Lights:
 
     def updateLEDs(self):
         leds, laser = getLedsAndLights(self.lights)
+        #leds = self.lights
         currentStripColor0 = 0
         currentStripColor1 = 0
         useStrip0 = False
@@ -69,7 +70,10 @@ class Lights:
             if i%PIXELS_PER_STRING==0:
                 if isinstance(leds[4-i/PIXELS_PER_STRING], str):
                     color = toRGB(leds[4-i/PIXELS_PER_STRING])
-                    currentStripColor0 = Color(int(color[1]*255), int(color[0]*255), int(color[2]*255))
+                    currentStripColor0 = Color(int(color[1]), int(color[0]), int(color[2]))
+                    useStrip0 = True
+                elif len(leds[4-i/PIXELS_PER_STRING])==0:
+                    currentStripColor0 = 0
                     useStrip0 = True
                 else:
                     useStrip0 = False
@@ -78,14 +82,18 @@ class Lights:
                 self.strip0.setPixelColor(i, currentStripColor0)
             else:
                 stripIndex, lightIndex = self.ID[0][i]
+                print(leds[stripIndex][lightIndex])
                 color = toRGB(leds[stripIndex][lightIndex])
-                self.strip0.setPixelColor(i, Color(int(color[1] * 255), int(color[0] * 255), int(color[2] * 255)))
+                self.strip0.setPixelColor(i, Color(int(color[1]), int(color[0]), int(color[2])))
 
 
             if i%PIXELS_PER_STRING==0:
                 if isinstance(leds[5+i/PIXELS_PER_STRING], str):
                     color = toRGB(leds[5+i/PIXELS_PER_STRING])
-                    currentStripColor1 = Color(int(color[1]*255), int(color[0]*255), int(color[2]*255))
+                    currentStripColor1 = Color(int(color[1]), int(color[0]), int(color[2]))
+                    useStrip1 = True
+                elif len(leds[5+i/PIXELS_PER_STRING])==0:
+                    currentStripColor1 = 0
                     useStrip1 = True
                 else:
                     useStrip1 = False
@@ -95,7 +103,10 @@ class Lights:
             else:
                 stripIndex, lightIndex = self.ID[1][i]
                 color = toRGB(leds[stripIndex][lightIndex])
-                self.strip1.setPixelColor(i, Color(int(color[1] * 255), int(color[0] * 255), int(color[2] * 255)))
+                self.strip1.setPixelColor(i, Color(int(color[1]), int(color[0]), int(color[2])))
+
+        self.strip0.setBrightness(int(getBrightness() * 2.55))
+        self.strip1.setBrightness(int(getBrightness() * 2.55))
         self.strip0.show()
         self.strip1.show()
     # Keep in mind that:
@@ -179,7 +190,6 @@ class Lights:
 
     # Changes the GUI to reflect the current position of self.lights. Assumes that there is a gui
     def updateGUI(self):
-
         leds, laser = getLedsAndLights(self.lights)
         # Render lights
         # print self.lights
