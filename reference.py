@@ -129,6 +129,18 @@ def getBrightness():
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('LightsStatus')
 
+scenes = ["Pong", "General"]
+table.update_item(
+        Key={
+            'InfoId': 'Lights'
+        },
+        UpdateExpression="set scenes = :s",
+        ExpressionAttributeValues={
+            ':s': scenes
+        },
+        ReturnValues="UPDATED_NEW"
+    )
+
 
 def getBrightnessAWS():
     try:
@@ -198,6 +210,9 @@ def getSceneAWS():
     else:
         item = response['Item']
         return item['scene']
+
+def updateScene():
+    pass
 
 # Given a rectangle, turn the width and height into x2 and y2 positions for tkinter
 # if center is true, the x and y given are used as the center of the box returned
