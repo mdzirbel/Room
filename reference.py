@@ -9,6 +9,8 @@ import os
 mode = "ceil" # can be "gui" or "ceil"
 if os.name == 'nt': mode = "gui"
 
+scenes = ["Pong", "General"]
+
 lights_thread_print_when_behind_s = .03
 control_thread_print_when_behind_s = .02
 
@@ -129,7 +131,6 @@ def getBrightness():
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('LightsStatus')
 
-scenes = ["Pong", "General"]
 table.update_item(
         Key={
             'InfoId': 'Lights'
@@ -210,9 +211,6 @@ def getSceneAWS():
     else:
         item = response['Item']
         return item['scene']
-
-def updateScene():
-    pass
 
 # Given a rectangle, turn the width and height into x2 and y2 positions for tkinter
 # if center is true, the x and y given are used as the center of the box returned
