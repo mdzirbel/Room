@@ -13,15 +13,22 @@ currentLightProgram = General("general") # Create an active pong game with a poi
 
 lightController = Lights(currentLightProgram.outputs, ledUpdateRate, mode)
 
+currentScene = "General"
+
+def decideToUpdateScene():
+    scene = getSceneAWS()
+    if scene != currentScene:
+        updateScene(scene)
 # Default: go to general
 def updateScene(new_scene):
     global currentLightProgram
+    global currentScene
     # Add check for if new_scene == current_scene and do nothing
     if new_scene == "Pong":
         currentLightProgram = Pong(beingPressed, "pong")
     else:
         currentLightProgram = General("general")
-
+    currentScene = new_scene
     lightController.lights = currentLightProgram.outputs
 
 # Create a system for logging which keys are being pressed. If we aren't using the GUI this won't work, so don't run it when not using the GUI
@@ -53,7 +60,7 @@ def mainLoop():
             time.sleep(1)
 
             updateBrightness()
-            updateScene()
+            decideToUpdateScene()
 
     finally:
         stopAllThreads()

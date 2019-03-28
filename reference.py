@@ -212,6 +212,7 @@ def getSceneAWS():
         item = response['Item']
         return item['scene']
 
+
 # Given a rectangle, turn the width and height into x2 and y2 positions for tkinter
 # if center is true, the x and y given are used as the center of the box returned
 def rectalize(x, y, width, height, center=False):
